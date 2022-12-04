@@ -1,49 +1,53 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
-import { initOnRamp } from '@coinbase/cbpay-js';
+import { useState, useEffect } from 'react';
 import cbbutton from './images/button-cbPay-normal-generic.png';
+import { initOnRamp } from '@coinbase/cbpay-js';
 
-function CoinbaseButton(props) {
-    const [isReady, setIsReady] = useState(false);
+function PayWithCoinbaseButton({walletAddress}) {
+    const [onrampInstance, setOnrampInstance] = useState();
 
-    let walletAdd = props.walletAddress;
-
-    useEffect(function () {  
+    useEffect(() => {
+        console.log(walletAddress)
         initOnRamp({
             appId: process.env.REACT_APP_APP_ID,
-            target: '#cbpay-button-container',
             widgetParameters: {
-                destinationWallets: [{
-                    address: walletAdd,
-                    blockchains: process.env.REACT_APP_BLOCKCHAINS,
-             }],
+                destinationWallets: [
+                    {
+                        address: walletAddress,
+                        blockchains: process.env.REACT_APP_BLOCKCHAINS,
+                    },
+                ],
             },
-            onSuccess: function () {
-                  // handle navigation when user successfully completes the flow
-                  console.log("This was successful");
-                  setIsReady(true);
+            onSuccess: () => {
+                console.log('success');
             },
-            onExit: function () {
-                  // handle navigation from dismiss / exit events due to errors
-                  console.log("Exited");
+            onExit: () => {
+                console.log('exit');
             },
-            onEvent: function (event) {
-                  // event stream
-                  console.log("Event has occured");
+            onEvent: (event) => {
+                console.log('event', event);
             },
-            experienceLoggedIn: 'embedded',
+            experienceLoggedIn: 'popup',
             experienceLoggedOut: 'popup',
+            closeOnExit: true,
+            closeOnSuccess: true,
+        }, (_, instance) => {
+            setOnrampInstance(instance);
         });
-    },)
 
-    // render with button from previous example
-    return (
-        <div>
-            <a id="cbpay-button-container">
-                <img src={cbbutton} alt="coinbase pay button"/>
-            </a>
-        </div>
-    );
-}
+        return () => {
+            onrampInstance?.destroy();
+        };
+    }, [onrampInstance, walletAddress]);
 
-export default CoinbaseButton;
+    const handleClick = () => {
+        onrampInstance?.open();
+    };
+
+    // eslint-disable-next-line
+    return <a onClick={handleClick} disabled={!onrampInstance}>
+        <img src={cbbutton} alt="coinbase pay button" />
+    </a>;
+};
+
+export default PayWithCoinbaseButton;
