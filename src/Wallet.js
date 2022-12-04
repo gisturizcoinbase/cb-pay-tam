@@ -41,9 +41,6 @@ function Wallet() {
         }
     }
 
-    // async function getBalance() {
-
-    // }
     return (
         <div className="App">
             <header className="App-header">
