@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import cbbutton from './images/button-cbPay-normal-generic.png';
 import { initOnRamp } from '@coinbase/cbpay-js';
 
-function PayWithCoinbaseButton({walletAddress}) {
+function PayWithCoinbaseButton({ walletAddress }) {
     const [onrampInstance, setOnrampInstance] = useState();
 
     useEffect(() => {
@@ -14,7 +14,7 @@ function PayWithCoinbaseButton({walletAddress}) {
                 destinationWallets: [
                     {
                         address: walletAddress,
-                        blockchains: process.env.REACT_APP_BLOCKCHAINS,
+                        blockchains: ["ethereum"],
                     },
                 ],
             },
@@ -45,9 +45,11 @@ function PayWithCoinbaseButton({walletAddress}) {
     };
 
     // eslint-disable-next-line
-    return <a onClick={handleClick} disabled={!onrampInstance}>
-        <img src={cbbutton} alt="coinbase pay button" />
-    </a>;
+    return (
+        <a onClick={handleClick} disabled={!onrampInstance}>
+            <img src={cbbutton} alt="coinbase pay button" />
+        </a>
+    );
 };
 
 export default PayWithCoinbaseButton;
