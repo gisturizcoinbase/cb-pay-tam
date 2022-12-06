@@ -5,39 +5,44 @@ import { initOnRamp } from '@coinbase/cbpay-js';
 
 function PayWithCoinbaseButton({ walletAddress }) {
     const [onrampInstance, setOnrampInstance] = useState();
+    const [mount, setMount] = useState(false)
 
     useEffect(() => {
+        setMount(true)
         console.log(walletAddress)
-        initOnRamp({
-            appId: process.env.REACT_APP_APP_ID,
-            widgetParameters: {
-                destinationWallets: [
-                    {
-                        address: walletAddress,
-                        blockchains: ["ethereum"],
-                    },
-                ],
-            },
-            onSuccess: () => {
-                console.log('success');
-            },
-            onExit: () => {
-                console.log('exit');
-            },
-            onEvent: (event) => {
-                console.log('event', event);
-            },
-            experienceLoggedIn: 'popup',
-            experienceLoggedOut: 'popup',
-            closeOnExit: true,
-            closeOnSuccess: true,
-        }, (_, instance) => {
-            setOnrampInstance(instance);
-        });
 
-        return () => {
-            onrampInstance?.destroy();
-        };
+        if (mount) {
+            initOnRamp({
+                appId: process.env.REACT_APP_APP_ID,
+                widgetParameters: {
+                    destinationWallets: [
+                        {
+                            address: walletAddress,
+                            blockchains: ["ethereum"],
+                        },
+                    ],
+                },
+                onSuccess: () => {
+                    console.log('success');
+                },
+                onExit: () => {
+                    console.log('exit');
+                },
+                onEvent: (event) => {
+                    console.log('event', event);
+                },
+                experienceLoggedIn: 'popup',
+                experienceLoggedOut: 'popup',
+                closeOnExit: true,
+                closeOnSuccess: true,
+            }, (_, instance) => {
+                setOnrampInstance(instance);
+            });
+
+            return () => {
+                onrampInstance?.destroy();
+            };
+        }
     }, [onrampInstance, walletAddress]);
 
     const handleClick = () => {
