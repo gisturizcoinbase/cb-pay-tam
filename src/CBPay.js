@@ -18,9 +18,10 @@ function PayWithCoinbaseButton({ walletAddress }) {
                     destinationWallets: [
                         {
                             address: walletAddress,
-                            blockchains: ["ethereum", "base"],
+                            blockchains: ["ethereum"],
                         },
                     ],
+                    defaultNetwork: "base"
                 },
                 onSuccess: () => {
                     console.log('success');
