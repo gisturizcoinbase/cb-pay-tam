@@ -18,7 +18,7 @@ function PayWithCoinbaseButton({ walletAddress }) {
                     destinationWallets: [
                         {
                             address: walletAddress,
-                            blockchains: ["ethereum"],
+                            blockchains: ["ethereum", "base"],
                         },
                     ],
                 },
