@@ -13,15 +13,24 @@ function PayWithCoinbaseButton({ walletAddress }) {
 
         if (mount) {
             initOnRamp({
-                appId: process.env.REACT_APP_APP_ID,
+                appId: "f3a88f2a-3d1d-4110-885c-ff826e0c9a84",
                 widgetParameters: {
                     destinationWallets: [
                         {
                             address: walletAddress,
-                            blockchains: ["ethereum"],
+                            blockchains: ["ethereum", "base"],
                         },
                     ],
-                    defaultNetwork: "base"
+                    defaultNetwork: "base",
+                    // Default Buy
+                    // defaultExperience: "buy",
+                    // One Click Buy:
+                    // presetFiatAmount: 10,
+                    // fiatCurrency: "USD",
+                    // defaultAsset: "ETH",
+                    // defaultPaymentMethod: "CARD"
+                    // partnerUserId: example_random_string
+                    // redirectUrl: https://www.sample.com
                 },
                 onSuccess: () => {
                     console.log('success');
@@ -32,8 +41,8 @@ function PayWithCoinbaseButton({ walletAddress }) {
                 onEvent: (event) => {
                     console.log('event', event);
                 },
-                experienceLoggedIn: 'popup',
-                experienceLoggedOut: 'popup',
+                experienceLoggedIn: 'popup', //new_tab
+                experienceLoggedOut: 'popup', //new_tab
                 closeOnExit: true,
                 closeOnSuccess: true,
             }, (_, instance) => {
@@ -50,8 +59,9 @@ function PayWithCoinbaseButton({ walletAddress }) {
         onrampInstance?.open();
     };
 
-    // eslint-disable-next-line
+    
     return (
+        // eslint-disable-next-line
         <a onClick={handleClick} disabled={!onrampInstance}>
             <img src={cbbutton} alt="coinbase pay button" />
         </a>
